@@ -3,7 +3,10 @@ import './App.css';
 import { Button, FormControl, Input, InputLabel, Modal } from "@material-ui/core"
 import Message from './components/Message';
 import db from "./firebase";
-import firebase from "firebase"
+import firebase from "firebase";
+import FlipMove from "react-flip-move";
+import { Send } from "@material-ui/icons"
+import { IconButton } from "@material-ui/core"
 
 function App() {
 
@@ -18,7 +21,7 @@ function App() {
     db.collection('message')
       .orderBy('timestamp', 'desc')
       .onSnapshot(snapshot => {
-        setMessage(snapshot.docs.map(doc => doc.data()))
+        setMessage(snapshot.docs.map(doc => ({ id: doc.id, message: doc.data() })))
       })
   }, []);
 
@@ -43,6 +46,7 @@ function App() {
 
   return (
     <div className="app">
+      <img src="https://facebookbrand.com/wp-content/uploads/2018/09/Header-e1538151782912.png?w=100&h=100" />
       <h2>Welcome {username}</h2>
       {/* <Modal
         open={open}
@@ -53,7 +57,7 @@ function App() {
         <button onClick={e => setOpen(false)}>Ok</button>
         <button onClick={e => setOpen(false)}>Cancel</button>
       </Modal> */}
-      <form>
+      <form className="app_form">
         <FormControl>
           <InputLabel>Enter a Message...</InputLabel>
           <Input
@@ -61,24 +65,29 @@ function App() {
             className="msg_input"
             value={input}
           />
-          <Button
+
+          <IconButton
             disabled={!input}
             type="submit"
             variant="contained"
             color="primary"
             onClick={sendMessage}
           >
-            Send Message
-           </Button>
+            <Send />
+          </IconButton>
+
         </FormControl>
 
       </form>
 
-      {
-        message.map(message => (
-          <Message username={username} message={message} />
-        ))
-      }
+      <FlipMove>
+        {
+          message.map(({ id, message }) => (
+            <Message key={id} username={username} message={message} />
+          ))
+        }
+      </FlipMove>
+
 
     </div>
   );

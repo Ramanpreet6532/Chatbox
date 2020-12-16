@@ -1,3 +1,17 @@
 .app {
     margin-top: 30px;
+    text-align: center;
+}
+
+.app_form {
+    /* text-align: center; */
+    padding: 20px;
+    margin: 20px;
+    position: fixed;
+    bottom: 20px;
+    z-index: 1;
+    /* display: flex; */
+    /* flex-direction: row; */
+    background-color: #e9e9eb;
+    width: 100%;
 }
