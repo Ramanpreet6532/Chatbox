@@ -1,19 +1,31 @@
 import { useState, useEffect } from "react"
 import './App.css';
-import { Button, FormControl, Input, InputLabel } from "@material-ui/core"
+import { Button, FormControl, Input, InputLabel, Modal } from "@material-ui/core"
 import Message from './components/Message';
+import db from "./firebase"
 
 function App() {
 
   const [input, setInput] = useState("");
-  const [message, setMessage] = useState(['a', 'b']);
+  const [message, setMessage] = useState([]);
+  const [username, setUsername] = useState("");
 
-  console.log(input)
-  console.log(message)
+  // console.log(input)
+  // console.log(message)
+
+  useEffect(() => {
+    db.collection('message').onSnapshot(snapshot => {
+      setMessage(snapshot.docs.map(doc => doc.data()))
+    })
+  }, []);
+
+  useEffect(() => {
+    setUsername(prompt('Please Enter your Name'))
+  }, []);
 
   const sendMessage = (e) => {
-    e.preventDefault();
-    setMessage([...message, input]);
+    e.preventDefault()
+    setMessage([...message, { username: username, message: input }]);
 
     setInput('')
 
@@ -21,6 +33,16 @@ function App() {
 
   return (
     <div className="app">
+      <h2>Welcome {username}</h2>
+      {/* <Modal
+        open={open}
+        onClose={setOpen(false)}
+
+      >
+        <input />
+        <button onClick={e => setOpen(false)}>Ok</button>
+        <button onClick={e => setOpen(false)}>Cancel</button>
+      </Modal> */}
       <form>
         <FormControl>
           <InputLabel>Enter a Message...</InputLabel>
@@ -43,10 +65,11 @@ function App() {
       </form>
 
       {
-        message.map(msg => (
-          <Message text={msg} />
+        message.map(message => (
+          <Message username={username} message={message} />
         ))
       }
+
     </div>
   );
 }
