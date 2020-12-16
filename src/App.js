@@ -58,15 +58,16 @@ function App() {
         <button onClick={e => setOpen(false)}>Cancel</button>
       </Modal> */}
       <form className="app_form">
-        <FormControl>
-          <InputLabel>Enter a Message...</InputLabel>
+        <FormControl className="app_formControl">
           <Input
+            placeholder="Enter a Message..."
             onChange={(e) => setInput(e.target.value)}
-            className="msg_input"
+            className="app_input"
             value={input}
           />
 
           <IconButton
+            className="app_iconButton"
             disabled={!input}
             type="submit"
             variant="contained"
